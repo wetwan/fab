@@ -3,15 +3,15 @@ import LoginInput from "@/components/loginInput";
 import { Colors } from "@/constants/Colors";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
-const ForgetPassword = () => {
+const Verification = () => {
   const route = useRouter();
   return (
     <>
       <Stack.Screen
         options={{
-          headerTitle: "Forget Password",
+          headerTitle: "Verification",
           headerShown: true,
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -36,15 +36,34 @@ const ForgetPassword = () => {
             lineHeight: 30,
           }}
         >
-          Please Enter your Email Address to receive a verification code.
+          Enter the verification code sent to your Email
         </Text>
-        <LoginInput keyboardType="email-address" label="email address" />
+        <LoginInput keyboardType="number-pad" label="verification code" />
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            marginTop: 20,
+            gap: 5,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontFamily: "outfit" }}>
+            If you did not receive a code
+          </Text>
+          <Pressable onPress={() => {}}>
+            <Text style={{ fontFamily: "outfit", color: Colors.blue }}>
+              Resend
+            </Text>
+          </Pressable>
+        </View>
 
         <Button
           title="send"
           onPress={() => {
             {
-              route.push("/(auth)/passwordVerfication");
+              route.push("/(auth)/newPassword");
             }
           }}
           style={{ backgroundColor: Colors.red, marginTop: 40 }}
@@ -55,4 +74,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default Verification;

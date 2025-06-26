@@ -21,6 +21,18 @@ export default function RootLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="passwordVerfication"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="newPassword"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

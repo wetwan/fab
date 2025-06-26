@@ -5,13 +5,13 @@ import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 
-const ForgetPassword = () => {
+const NewPassword = () => {
   const route = useRouter();
   return (
     <>
       <Stack.Screen
         options={{
-          headerTitle: "Forget Password",
+          headerTitle: "New Password",
           headerShown: true,
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -36,15 +36,23 @@ const ForgetPassword = () => {
             lineHeight: 30,
           }}
         >
-          Please Enter your Email Address to receive a verification code.
+          Please, enter your new password
         </Text>
-        <LoginInput keyboardType="email-address" label="email address" />
+        <LoginInput
+          keyboardType="default"
+          label="enter new password"
+          secureTextEntry={true}
+        />
+        <LoginInput
+          keyboardType="default"
+          label="confrim password"
+          secureTextEntry={true}
+        />
 
         <Button
           title="send"
           onPress={() => {
             {
-              route.push("/(auth)/passwordVerfication");
             }
           }}
           style={{ backgroundColor: Colors.red, marginTop: 40 }}
@@ -55,4 +63,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default NewPassword;
