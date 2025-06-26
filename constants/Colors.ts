@@ -23,4 +23,31 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
+  red: '#D93B19',
+  blue: '#659CF6',
+  white: '#fff',
+  black: '#000',
+  gray: '#aaa',
 };
+
+export const listColor = [
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "orange",
+  "purple",
+  "pink",
+  "brown",
+
+  "gray",
+  "cyan",
+  "magenta",
+  "lime",
+  "teal",
+  "indigo",
+  "violet",
+  "gold",
+  "silver",
+  "maroon",
+];
