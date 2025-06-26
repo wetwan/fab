@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     fontFamily: "outfit",
+    textTransform: "capitalize",
   },
   textBlock: {
     color: "#fff",

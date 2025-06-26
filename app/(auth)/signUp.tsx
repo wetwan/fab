@@ -68,6 +68,7 @@ const SignUp = () => {
           marginHorizontal: "10%",
           marginTop: 10,
           flexDirection: "row",
+          gap: 5,
         }}
       >
         <Text
@@ -79,21 +80,21 @@ const SignUp = () => {
           }}
         >
           Already have an account?
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => {
-              router.push("/(auth)");
-            }}
-          >
-            <Text style={{ color: Colors.blue, fontFamily: "outfit" }}>
-              Sign in
-            </Text>
-          </TouchableOpacity>
-        </Text>
+        </Text>{" "}
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => {
+            router.push("/(auth)");
+          }}
+        >
+          <Text style={{ color: Colors.blue, fontFamily: "outfit" }}>
+            Sign in
+          </Text>
+        </TouchableOpacity>
       </View>
       <OtherSignIn screen="up" />
     </View>

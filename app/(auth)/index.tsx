@@ -58,13 +58,12 @@ const Login = () => {
         style={{
           alignItems: "center",
           justifyContent: "space-between",
-          marginHorizontal: "15%",
+          marginHorizontal: "11%",
           marginTop: 10,
           flexDirection: "row",
         }}
       >
         <Pressable
-          style={{}}
           onPress={() => {
             router.push("/(auth)/forgetPassword");
           }}
@@ -73,15 +72,23 @@ const Login = () => {
             Forget Password
           </Text>
         </Pressable>
-
-        <Text
+        <View
           style={{
-            fontFamily: "outfit",
-            width: "100%",
-            textAlign: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 5,
           }}
         >
-          Don&apos;t have an account?
+          <Text
+            style={{
+              fontFamily: "outfit",
+
+              textAlign: "center",
+            }}
+          >
+            Don&apos;t have an account?
+          </Text>
           <TouchableOpacity
             style={{}}
             onPress={() => {
@@ -93,7 +100,7 @@ const Login = () => {
               Sign up
             </Text>
           </TouchableOpacity>
-        </Text>
+        </View>
       </View>
       <OtherSignIn screen="in" />
     </View>
