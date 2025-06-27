@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ interface ButtonProps {
   variant?: ButtonVariant;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  disabled?: boolean;
 }
 
 const Button = ({
@@ -23,13 +24,14 @@ const Button = ({
   variant = "block",
   style,
   textStyle,
+  disabled,
 }: ButtonProps) => {
   const isBlock = variant === "block";
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.base, isBlock ? styles.block : styles.white, style]}
-      activeOpacity={0.8}
+      disabled={disabled}
     >
       <Text
         style={[

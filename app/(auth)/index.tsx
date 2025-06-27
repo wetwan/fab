@@ -2,19 +2,62 @@ import Button from "@/components/button";
 import LoginInput from "@/components/loginInput";
 import OtherSignIn from "@/components/otherSignIn";
 import { Colors } from "@/constants/Colors";
+import { useSignIn } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import React from "react";
+import { useState } from "react";
+
 import {
   Image,
   Pressable,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
 
-const Login = () => {
+const Index = () => {
+  const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onSignInPress = async () => {
+    if (!email || !password) {
+      ToastAndroid.show("Please fill all the fields", ToastAndroid.TOP);
+      return; // Added return here to stop execution if fields are not filled
+    }
+    if (!isLoaded) return;
+
+    // Start the sign-in process using the email and password provided
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      // If sign-in process is complete, set the created session as active
+      // and redirect the user
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/(tabs)");
+        ToastAndroid.show("login successfull", ToastAndroid.TOP);
+      } else {
+        // If the status isn't complete, check why. User might need to
+        // complete further steps.
+        console.error(JSON.stringify(signInAttempt, null, 2));
+        ToastAndroid.show(
+          "Sign up failed. Please try again.",
+          ToastAndroid.TOP
+        );
+      }
+    } catch (err) {
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.logoContainer}>
@@ -30,12 +73,16 @@ const Login = () => {
           keyboardType="email-address"
           autoCapitalize="none"
           containerStyle={{ marginHorizontal: "10%" }}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
         <LoginInput
           label="password"
           autoCapitalize="none"
           secureTextEntry={true}
           containerStyle={{ marginHorizontal: "10%" }}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
         />
 
         <Button
@@ -43,7 +90,7 @@ const Login = () => {
           textStyle={{ textTransform: "capitalize", fontFamily: "outfit" }}
           onPress={() => {
             {
-              console.log("Sign in pressed");
+              onSignInPress();
             }
           }}
           style={{
@@ -92,7 +139,7 @@ const Login = () => {
           <TouchableOpacity
             style={{}}
             onPress={() => {
-              router.push("/(auth)/signUp");
+              router.push("/signUp");
               console.log("Sign up pressed");
             }}
           >
@@ -107,7 +154,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Index;
 
 const styles = StyleSheet.create({
   logoContainer: {

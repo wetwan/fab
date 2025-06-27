@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Colors } from "@/constants/Colors";
 import Feather from "@expo/vector-icons/Feather";
-import React, { useEffect, useRef, useState } from "react";
+import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Platform,
@@ -63,7 +64,7 @@ const LoginInput = ({
     left: 0,
     top: animatedLabel.interpolate({
       inputRange: [0, 1],
-      outputRange: [40, 10],
+      outputRange: [20, 0],
     }),
     fontSize: animatedLabel.interpolate({
       inputRange: [0, 1],

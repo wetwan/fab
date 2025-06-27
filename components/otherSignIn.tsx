@@ -1,9 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { auth, provider } from "@/configs/FireBase";
 import { Colors } from "@/constants/Colors";
-import React, { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import * as React from "react";
+import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
 const OtherSignIn = ({ screen }: any) => {
   const [press, setPress] = useState("");
+
+  const signInWithGoogle = () => {
+  
+  };
   return (
     <View
       style={{
@@ -55,6 +63,7 @@ const OtherSignIn = ({ screen }: any) => {
           }}
           onPress={() => {
             setPress("google");
+            signInWithGoogle();
           }}
         >
           <Image

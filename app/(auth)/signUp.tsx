@@ -2,12 +2,50 @@ import Button from "@/components/button";
 import LoginInput from "@/components/loginInput";
 import OtherSignIn from "@/components/otherSignIn";
 import { Colors } from "@/constants/Colors";
+import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-const SignUp = () => {
+const SignUps = () => {
+  const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const handleSignUp = async () => {
+    if (!email || !password || !firstName || !lastName) {
+      ToastAndroid.show("Please fill all the fields", ToastAndroid.TOP);
+      return; // Added return here to stop execution if fields are not filled
+    }
+    if (!isLoaded) return;
+
+    try {
+      await signUp.create({
+        emailAddress: email,
+        password,
+        firstName,
+        lastName
+      });
+
+      await setActive({ session: signUp.createdSessionId });
+      router.replace("/(tabs)");
+      ToastAndroid.show("Sign up successfull", ToastAndroid.TOP);
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+
+      ToastAndroid.show("Sign up failed. Please try again.", ToastAndroid.TOP);
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.logoContainer}>
@@ -23,6 +61,8 @@ const SignUp = () => {
           keyboardType="default"
           autoCapitalize="none"
           containerStyle={{ marginHorizontal: "10%" }}
+          value={firstName}
+          onChangeText={(text) => setFirstName(text)}
         />
         <LoginInput
           label="last name"
@@ -30,6 +70,8 @@ const SignUp = () => {
           keyboardType="default"
           autoCapitalize="none"
           containerStyle={{ marginHorizontal: "10%" }}
+          value={lastName}
+          onChangeText={(text) => setLastName(text)}
         />
         <LoginInput
           label="email address"
@@ -37,22 +79,22 @@ const SignUp = () => {
           keyboardType="email-address"
           autoCapitalize="none"
           containerStyle={{ marginHorizontal: "10%" }}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
         <LoginInput
           label="password"
           autoCapitalize="none"
           secureTextEntry={true}
           containerStyle={{ marginHorizontal: "10%" }}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
         />
 
         <Button
           title="sign up"
           textStyle={{ textTransform: "capitalize", fontFamily: "outfit" }}
-          onPress={() => {
-            {
-              console.log("Sign up pressed");
-            }
-          }}
+          onPress={handleSignUp}
           style={{
             marginHorizontal: "10%",
             marginTop: 20,
@@ -100,8 +142,7 @@ const SignUp = () => {
     </View>
   );
 };
-
-export default SignUp;
+export default SignUps;
 
 const styles = StyleSheet.create({
   logoContainer: {

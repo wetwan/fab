@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import React from "react";
+import * as React from "react";
 import {
   Image,
   Pressable,

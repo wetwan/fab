@@ -1,12 +1,54 @@
 import Button from "@/components/button";
 import LoginInput from "@/components/loginInput";
 import { Colors } from "@/constants/Colors";
-import { Stack, useRouter } from "expo-router";
-import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { useSignIn } from "@clerk/clerk-expo";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Pressable, Text, ToastAndroid, View } from "react-native";
 
 const Verification = () => {
-  const route = useRouter();
+  const router = useRouter();
+
+  const { isLoaded } = useSignIn();
+
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false); // Can be used for local UI loading
+  const [error, setError] = useState("");
+
+  const params = useLocalSearchParams();
+  const emailFromParams = params.email;
+
+  const handleVerifyCode = async () => {
+    if (!code) {
+      ToastAndroid.show("Please enter the verification code", ToastAndroid.TOP);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      ToastAndroid.show(
+        "Code accepted. Now set your new password.",
+        ToastAndroid.SHORT
+      );
+      router.push({
+        pathname: "/newPassword",
+        params: {
+          email: emailFromParams,
+          code: code,
+        },
+      });
+    } catch (err) {
+      setError("Failed to process code. Please try again."); // This catch is more for local errors or navigation issues
+      console.error(err);
+      ToastAndroid.show(error, ToastAndroid.LONG);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Stack.Screen
@@ -38,7 +80,12 @@ const Verification = () => {
         >
           Enter the verification code sent to your Email
         </Text>
-        <LoginInput keyboardType="number-pad" label="verification code" />
+        <LoginInput
+          keyboardType="default"
+          onChangeText={(y) => setCode(y)}
+          label="verification code"
+          value={code}
+        />
 
         <View
           style={{
@@ -60,10 +107,11 @@ const Verification = () => {
         </View>
 
         <Button
-          title="send"
+          title={loading ? "comfirming code" : "send"}
+          disabled={loading}
           onPress={() => {
             {
-              route.push("/(auth)/newPassword");
+              handleVerifyCode();
             }
           }}
           style={{ backgroundColor: Colors.red, marginTop: 40 }}
