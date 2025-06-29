@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 
 const CategoryId = () => {
   const { categoryId } = useLocalSearchParams();
@@ -74,6 +74,20 @@ const CategoryId = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ marginHorizontal: "2%" }}
         renderItem={({ item: food }) => <Food food={food} />}
+        ListEmptyComponent={() => (
+          <View style={{ justifyContent: "center", alignItems: "center", marginTop: 250}}>
+            <Text
+              style={{
+                fontFamily: "outfit-bold",
+                textAlign: "center",
+                textTransform: "capitalize",
+                color: "gray",
+              }}
+            >
+              no {categoryId} found
+            </Text>
+          </View>
+        )}
       />
     </View>
   );

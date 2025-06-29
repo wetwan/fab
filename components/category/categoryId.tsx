@@ -23,7 +23,7 @@ const CategoryId = ({ category }: any) => {
         paddingHorizontal: 20,
         flex: 1,
         borderRadius: 20,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.red,
       }}
     >
       <Image
@@ -42,17 +42,16 @@ const CategoryId = ({ category }: any) => {
           style={{
             fontFamily: "outfit",
             fontSize: 16,
-            borderRadius: 10,
-            backgroundColor: Colors.white,
+            borderRadius: 4,
+            backgroundColor: Colors.blue,
             textTransform: "capitalize",
-            paddingInline: 10,
-            padding: 4,
-            color: Colors.black,
+            paddingInline: 15,
+            padding: 6,
+            color: Colors.white,
           }}
         >
           {category.name}
         </Text>
-      
       </View>
     </TouchableOpacity>
   );

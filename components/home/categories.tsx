@@ -34,7 +34,7 @@ const Categories = () => {
               fontSize: 16,
               borderRadius: 10,
               flex: 1,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.red,
               textTransform: "capitalize",
               paddingInline: 10,
               padding: 4,

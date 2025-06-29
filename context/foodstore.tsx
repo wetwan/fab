@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { db } from "@/configs/FireBase";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -12,6 +11,8 @@ type FoodContextType = {
   slider: any[];
   setSlider: React.Dispatch<React.SetStateAction<any[]>>;
   getSlider: () => Promise<void>;
+  categoryFood: any[];
+  setCategoryFood: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const FoodContext = createContext<FoodContextType | undefined>(undefined);
@@ -51,30 +52,29 @@ export function AppContextProvider({
     setIsLoading(false);
   };
 
-  // const getCategoryFood = async () => {
-  //   setIsLoading(true);
-  //   setCategoryFood([]);
+  const getCategoryFood = async () => {
+    setIsLoading(true);
+    setCategoryFood([]);
 
-  //   try {
-  //     const q = query(collection(db, "food"), where("category", "==", category));
-  //     const querySnapshot = await getDocs(q);
+    try {
+      const q = query(collection(db, "food"));
+      const querySnapshot = await getDocs(q);
 
-  //     const foods = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setCategoryFood(foods);
-  //   } catch (error) {
-  //     console.error("Failed to fetch category food:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+      querySnapshot.docs.forEach((doc) => {
+        setCategoryFood((prev) => [...prev, { id: doc.id, ...doc.data() }]);
+      
+      });
+    } catch (error) {
+      console.error("Failed to fetch category food:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     getCategory();
     getSlider();
-    // getCategoryFood();
+    getCategoryFood();
   }, []);
   return (
     <FoodContext.Provider
@@ -87,6 +87,8 @@ export function AppContextProvider({
         getSlider,
         slider,
         setSlider,
+        setCategoryFood,
+        categoryFood,
       }}
     >
       {children}
