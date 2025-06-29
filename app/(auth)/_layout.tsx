@@ -1,35 +1,26 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Redirect, SplashScreen, Stack, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { Redirect, Stack } from "expo-router";
 
 export default function RootLayout() {
-  const { isSignedIn, isLoaded } = useAuth();
-  const router = useRouter();
+  // const hasNavigated = useRef(false);
+  // const router = useRouter();
+  // const { isSignedIn, isLoaded } = useAuth();
 
-  useEffect(() => {
-    if (isLoaded) {
-      SplashScreen.hideAsync();
-      if (isSignedIn) {
-        router.replace("/(tabs)");
-      } else {
-        router.replace("/(auth)");
-      }
-    }
-  }, [isSignedIn, isLoaded]);
+  // useEffect(() => {
+  //   if (!hasNavigated.current && isLoaded) {
+  //     SplashScreen.hideAsync();
+  //     if (isSignedIn) {
+  //       router.replace("/(tabs)");
+  //     } else {
+  //       router.replace("/(auth)");
+  //     }
+  //   }
+  // }, [isLoaded, isSignedIn]);
+  const { isSignedIn } = useAuth();
+
   if (isSignedIn) {
-    return <Redirect href="/(tabs)" />;
+    return <Redirect href={"/(tabs)"} />;
   }
 
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="signUp" options={{ headerShown: false }} />
-      <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="passwordVerification"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="newPassword" options={{ headerShown: false }} />
-    </Stack>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

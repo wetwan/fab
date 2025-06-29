@@ -21,11 +21,14 @@ const SignUps = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [pendingVerfication, setPendingVerfication] = useState<boolean>(false);
+  const [code, setCode] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSignUp = async () => {
     if (!email || !password || !firstName || !lastName) {
       ToastAndroid.show("Please fill all the fields", ToastAndroid.TOP);
-      return; // Added return here to stop execution if fields are not filled
+      return;
     }
     if (!isLoaded) return;
 
@@ -34,18 +37,23 @@ const SignUps = () => {
         emailAddress: email,
         password,
         firstName,
-        lastName
+        lastName,
       });
-
       await setActive({ session: signUp.createdSessionId });
+    
       router.replace("/(tabs)");
-      ToastAndroid.show("Sign up successfull", ToastAndroid.TOP);
+      ToastAndroid.show("Sign up successful!", ToastAndroid.TOP);
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
-
-      ToastAndroid.show("Sign up failed. Please try again.", ToastAndroid.TOP);
+      // You should parse the error from Clerk to show specific messages
+      const clerkError = err as any; // Type assertion if using TypeScript
+      const errorMessage =
+        clerkError.errors?.[0]?.longMessage ||
+        "Sign up failed. Please try again.";
+      ToastAndroid.show(errorMessage, ToastAndroid.TOP);
     }
   };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.logoContainer}>
@@ -122,7 +130,7 @@ const SignUps = () => {
           }}
         >
           Already have an account?
-        </Text>{" "}
+        </Text>
         <TouchableOpacity
           style={{
             flexDirection: "row",

@@ -58,6 +58,7 @@ const Index = () => {
       console.error(JSON.stringify(err, null, 2));
     }
   };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.logoContainer}>

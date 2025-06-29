@@ -1,17 +1,40 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { auth, provider } from "@/configs/FireBase";
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { Colors } from "@/constants/Colors";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useWarmUpBrowser } from "@/hooks/useWarmUpBrowse";
+import { useOAuth } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
 import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
+WebBrowser.maybeCompleteAuthSession();
+
 const OtherSignIn = ({ screen }: any) => {
+  useWarmUpBrowser();
+  const router = useRouter();
+
   const [press, setPress] = useState("");
 
-  const signInWithGoogle = () => {
-  
-  };
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const onPressSignInWithGoogle = React.useCallback(async () => {
+    try {
+      const { createdSessionId, setActive } = await startOAuthFlow();
+
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+        router.replace("/(tabs)/profile");
+      }
+    } catch (err: any) {
+      console.error("OAuth error", JSON.stringify(err, null, 2));
+      alert(
+        `Google Login Failed: ${
+          err.errors?.[0]?.longMessage || "An unknown error occurred."
+        }`
+      );
+    }
+  }, []);
   return (
     <View
       style={{
@@ -63,7 +86,7 @@ const OtherSignIn = ({ screen }: any) => {
           }}
           onPress={() => {
             setPress("google");
-            signInWithGoogle();
+            onPressSignInWithGoogle();
           }}
         >
           <Image

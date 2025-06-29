@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Platform,
-  Text,
   TextInput,
   TextInputProps,
   TextStyle,
@@ -35,6 +34,12 @@ const LoginInput = ({
   const [internalValue, setInternalValue] = useState(value ?? "");
   const [showPassword, setShowPassword] = useState(false);
   const animatedLabel = useRef(new Animated.Value(value ? 1 : 0)).current;
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalValue(value);
+    }
+  }, [value]);
 
   useEffect(() => {
     Animated.timing(animatedLabel, {
@@ -121,14 +126,11 @@ const LoginInput = ({
             onPress={() => setShowPassword((prev) => !prev)}
             style={{ marginLeft: 8, padding: 4 }}
           >
-            <Text style={{ color: "#659CF6", fontSize: 16 }}>
-              {showPassword ? (
-                <Feather name="eye-off" size={20} color={Colors.red} />
-              ) : (
-                <Feather name="eye" size={20} color={Colors.blue} />
-              )}
-            </Text>
-            {/* Replace with an eye icon if you use a vector icon library */}
+            {showPassword ? (
+              <Feather name="eye-off" size={20} color={Colors.red} />
+            ) : (
+              <Feather name="eye" size={20} color={Colors.blue} />
+            )}
           </TouchableOpacity>
         )}
       </View>

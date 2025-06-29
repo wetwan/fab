@@ -1,9 +1,8 @@
 import { tokenCache } from "@/cache";
+import { AppContextProvider } from "@/context/foodstore";
 import { ClerkLoaded, ClerkProvider } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen } from "expo-router";
-
-SplashScreen.preventAutoHideAsync();
+import { Slot } from "expo-router";
 
 export default function RootLayout() {
   useFonts({
@@ -20,9 +19,11 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <ClerkLoaded>
-        <Slot screenOptions={{ headerShown: false }} />
-      </ClerkLoaded>
+      <AppContextProvider>
+        <ClerkLoaded>
+          <Slot screenOptions={{ headerShown: false }} />
+        </ClerkLoaded>
+      </AppContextProvider>
     </ClerkProvider>
   );
 }
