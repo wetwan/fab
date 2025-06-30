@@ -15,13 +15,15 @@ interface CartItem {
 
 type TotalPaymentProp = {
   cart: CartItem[];
+  taxPriceOfCart: number
+  totalPriceOfCart: number
 };
-const TotalPayment = ({ cart }: TotalPaymentProp) => {
-  const totalPriceOfCart = cart.reduce(
-    (acc, item) => acc + item?.quantity * item.price,
-    0
-  );
-  const taxPriceOfCart = (4 / 100) * totalPriceOfCart;
+const TotalPayment = ({ cart , taxPriceOfCart, totalPriceOfCart}: TotalPaymentProp) => {
+  // const totalPriceOfCart = cart.reduce(
+  //   (acc, item) => acc + item?.quantity * item.price,
+  //   0
+  // );
+  // const taxPriceOfCart = (4 / 100) * totalPriceOfCart;
   const ammountbepaid = taxPriceOfCart + totalPriceOfCart;
   return (
     <View
@@ -103,7 +105,7 @@ const TotalPayment = ({ cart }: TotalPaymentProp) => {
         </View>
       </View>
 
-      <TouchableOpacity style={[styles.button]} activeOpacity={9}>
+      <TouchableOpacity style={[styles.button]} activeOpacity={5}>
         <Text
           style={[styles.text, { color: "white", fontFamily: "outfit-bold" }]}
         >

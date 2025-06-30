@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
 
 const CategoryId = () => {
   const { categoryId } = useLocalSearchParams();
@@ -54,6 +54,14 @@ const CategoryId = () => {
   useEffect(() => {
     getCategoryFood();
   }, []);
+
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#e74c3c" />
+        </View>
+      );
+    }
 
   return (
     <View style={{ marginTop: 20 }}>

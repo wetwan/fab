@@ -26,7 +26,6 @@ export function AppContextProvider({
   const [slider, setSlider] = useState<any[]>([]);
 
   const getCategory = async () => {
-    setCategory([]);
     setIsLoading(true);
     const q = query(collection(db, "category"), orderBy("id"));
     const quarySnapshot = await getDocs(q);

@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import HotDealItem from "./hotDealItem";
 
 const HotDeals = () => {
@@ -23,14 +23,14 @@ const HotDeals = () => {
   const { user } = useUser();
 
   const userId = user?.id;
-  const { setIsLoading } = useFoodCreation();
+  const { setIsLoading, isLoading } = useFoodCreation();
   const [getlike, setGetLike] = useState<FoodItem[]>([]);
   const [hasLiked, setHasLiked] = useState(false);
   const hotdeal = true;
 
   const GetLike = async () => {
     setIsLoading(true);
-    setGetLike([]); 
+    setGetLike([]);
 
     try {
       const q = query(
@@ -77,6 +77,14 @@ const HotDeals = () => {
   useEffect(() => {
     GetLike();
   }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </View>
+    );
+  }
   return (
     <View style={{ marginTop: 20, marginHorizontal: "2%" }}>
       <View
@@ -146,3 +154,12 @@ const HotDeals = () => {
 };
 
 export default HotDeals;
+
+const styles = StyleSheet.create({
+  skeletonItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+  },
+});

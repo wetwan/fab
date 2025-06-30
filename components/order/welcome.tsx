@@ -1,9 +1,11 @@
 import { Colors } from "@/constants/Colors";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
 
 const Welcome = () => {
+  const router = useRouter();
   return (
     <View
       style={{
@@ -18,10 +20,10 @@ const Welcome = () => {
         paddingInline: 20,
       }}
     >
-      <Pressable>
+      <Pressable onPress={() => router.replace("/")}>
         <Ionicons name="wallet" size={24} color="white" />
       </Pressable>
-      <Pressable>
+      <Pressable onPress={() => router.replace("/(likes)/myLikes")}>
         <AntDesign name="heart" size={24} color="white" />
       </Pressable>
     </View>

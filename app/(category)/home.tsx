@@ -3,7 +3,13 @@ import { useFoodCreation } from "@/context/foodstore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback } from "react";
-import { FlatList, Pressable, SafeAreaView } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  View,
+} from "react-native";
 const CategoryHome = () => {
   const { category, isLoading, getCategory } = useFoodCreation();
   const router = useRouter();
@@ -19,6 +25,13 @@ const CategoryHome = () => {
     [router]
   );
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </View>
+    );
+  }
   return (
     <SafeAreaView>
       <Stack.Screen

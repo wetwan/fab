@@ -10,14 +10,14 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
 
 const MyLikes = () => {
   const router = useRouter();
   const { user } = useUser();
 
   const userId = user?.id;
-  const { setIsLoading } = useFoodCreation();
+  const { setIsLoading , isLoading} = useFoodCreation();
   const [getlikes, setGetLike] = useState<any[]>([]);
   const hotdeal = true;
   const [hasLiked, setHasLiked] = useState(false);
@@ -64,9 +64,7 @@ const MyLikes = () => {
         }
       });
 
-      // Now, slice the array to your desired limit after filtering
-      setGetLike(userLikedFoodItems); // Get the top 6 liked by the user
-      // You'd also need to handle setHasLiked based on these filtered items
+      setGetLike(userLikedFoodItems);
       setHasLiked(userLikedFoodItems.length > 0);
     } catch (error) {
       console.error("Error getting user-liked food items:", error);
@@ -92,7 +90,7 @@ const MyLikes = () => {
   const renderRight = useCallback(
     () => (
       <Pressable
-        onPress={() => router.replace("/(likes)/myLikes")}
+        onPress={() => router.replace("/(tabs)/order")}
         style={{ paddingHorizontal: 1 }}
       >
         <AntDesign name="shoppingcart" size={24} color="red" />
@@ -100,6 +98,14 @@ const MyLikes = () => {
     ),
     [router]
   );
+
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#e74c3c" />
+        </View>
+      );
+    }
   return (
     <View>
       <Stack.Screen

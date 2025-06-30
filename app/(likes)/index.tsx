@@ -14,12 +14,12 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Pressable, SafeAreaView, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, SafeAreaView, View } from "react-native";
 
 const Index = () => {
   const router = useRouter();
 
-  const { setIsLoading } = useFoodCreation();
+  const { setIsLoading, isLoading } = useFoodCreation();
   const [getlikes, setGetLikes] = useState<any[]>([]);
   const hotdeal = true;
   const GetLike = async () => {
@@ -71,6 +71,14 @@ const Index = () => {
     ),
     [router]
   );
+
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#e74c3c" />
+        </View>
+      );
+    }
 
   return (
     <SafeAreaView style={{ marginTop: 20, marginHorizontal: "2%" }}>

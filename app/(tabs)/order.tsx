@@ -28,6 +28,12 @@ const Order = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const totalPriceOfCart = cart.reduce(
+    (acc, item) => acc + item?.quantity * item.price,
+    0
+  );
+  const taxPriceOfCart = (4 / 100) * totalPriceOfCart;
+
   const getCart = async () => {
     try {
       setCart([]);
@@ -74,7 +80,7 @@ const Order = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       {/* header  section */}
       <Welcome />
 
@@ -86,7 +92,11 @@ const Order = () => {
 
       {/* total amount and payment  */}
 
-      <TotalPayment cart={cart} />
+      <TotalPayment
+        cart={cart}
+        totalPriceOfCart={totalPriceOfCart}
+        taxPriceOfCart={taxPriceOfCart}
+      />
     </View>
   );
 };

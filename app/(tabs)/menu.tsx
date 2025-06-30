@@ -4,22 +4,38 @@ import { Colors } from "@/constants/Colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 const Menu = () => {
   const [allFoods, setAllFoods] = useState<any[]>([]);
   const [filteredFoods, setFilteredFoods] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchFoods = async () => {
-      const querySnapshot = await getDocs(collection(db, "food"));
-      const foods = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAllFoods(foods);
-      setFilteredFoods(foods); // Initially, show all
+      setLoading(true);
+      try {
+        const querySnapshot = await getDocs(collection(db, "food"));
+        const foods = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAllFoods(foods);
+        setFilteredFoods(foods);
+      } catch (error) {
+        console.log(error, " error fetching data");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchFoods();
@@ -35,6 +51,13 @@ const Menu = () => {
 
     setFilteredFoods(filtered);
   };
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </SafeAreaView>
+    );
+  }
   return (
     <View style={{}}>
       {/* search box */}
@@ -107,3 +130,7 @@ const Menu = () => {
 };
 
 export default Menu;
+
+const styles = StyleSheet.create({
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+});

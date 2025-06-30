@@ -2,12 +2,26 @@ import { Colors } from "@/constants/Colors";
 import { useFoodCreation } from "@/context/foodstore";
 import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import HomeCategory from "./homeCategory";
 
 const Categories = () => {
-  const { category } = useFoodCreation();
+  const { category, isLoading } = useFoodCreation();
   const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </View>
+    );
+  }
   return (
     <View style={{ marginTop: 20, marginHorizontal: "2%" }}>
       <View

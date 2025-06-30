@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-const HotDealItem = ({ deals, hotdeal }: any) => {
+const HotDealItem = ({ deals }: any) => {
   const router = useRouter();
 
   return (
