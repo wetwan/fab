@@ -5,7 +5,14 @@ import { useFoodCreation } from "@/context/foodstore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, View } from "react-native";
 
@@ -21,6 +28,7 @@ const Index = () => {
     try {
       const q = query(
         collection(db, "food"),
+        where("like", "!=", []),
         orderBy("like", "desc"),
         limit(100)
       );
@@ -78,7 +86,7 @@ const Index = () => {
       />
       <View
         style={{
-          justifyContent: 'flex-start',
+          justifyContent: "flex-start",
           alignItems: "center",
           flexDirection: "row",
           flexWrap: "wrap",

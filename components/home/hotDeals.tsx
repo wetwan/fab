@@ -1,40 +1,79 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { db } from "@/configs/FireBase";
 import { Colors } from "@/constants/Colors";
 import { useFoodCreation } from "@/context/foodstore";
+import { FoodItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import HotDealItem from "./hotDealItem";
-import { FoodItem } from "@/types/type";
 
 const HotDeals = () => {
   const router = useRouter();
+  const { user } = useUser();
+
+  const userId = user?.id;
   const { setIsLoading } = useFoodCreation();
   const [getlike, setGetLike] = useState<FoodItem[]>([]);
+  const [hasLiked, setHasLiked] = useState(false);
   const hotdeal = true;
+
   const GetLike = async () => {
     setIsLoading(true);
-    setGetLike([]);
+    setGetLike([]); 
+
     try {
       const q = query(
         collection(db, "food"),
+        where("like", "!=", []),
         orderBy("like", "desc"),
         limit(6)
       );
 
-      const quarySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q);
 
-      quarySnapshot.forEach((doc) => {
-        setGetLike((prev) => [...prev, { id: doc.id, ...doc.data() } as FoodItem]);
+      const likedFoodItems: FoodItem[] = [];
+      let userHasLikedAny = false;
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const item: FoodItem = {
+          id: doc.id,
+          name: data.name,
+          category: data.category,
+          image: data.image,
+          price: data.price,
+          like: data.like || [],
+          description: data.description || "No description available.",
+        };
+        likedFoodItems.push(item);
+
+        if (userId && data.like && data.like.includes(userId)) {
+          userHasLikedAny = true;
+        }
       });
+
+      setGetLike(likedFoodItems);
+      if (userId) {
+        setHasLiked(userHasLikedAny);
+      }
     } catch (error) {
-      console.log(error, "getlike error");
+      console.error("Error getting liked food items:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     GetLike();
   }, []);
@@ -79,7 +118,7 @@ const HotDeals = () => {
       <View
         style={{
           flex: 1,
-          justifyContent: 'flex-start',
+          justifyContent: "flex-start",
           alignItems: "center",
           flexDirection: "row",
           flexWrap: "wrap",

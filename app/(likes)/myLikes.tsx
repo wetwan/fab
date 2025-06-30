@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import HotDealItem from "@/components/home/hotDealItem";
 import { db } from "@/configs/FireBase";
 import { useFoodCreation } from "@/context/foodstore";
+import { FoodItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
@@ -11,34 +14,68 @@ import { FlatList, Pressable, View } from "react-native";
 
 const MyLikes = () => {
   const router = useRouter();
+  const { user } = useUser();
 
+  const userId = user?.id;
   const { setIsLoading } = useFoodCreation();
   const [getlikes, setGetLike] = useState<any[]>([]);
   const hotdeal = true;
-  const GetLike = async () => {
+  const [hasLiked, setHasLiked] = useState(false);
+
+  const GetLikedItemsByUser = async (
+    userId: string | undefined
+  ): Promise<void> => {
+    if (!userId) {
+      console.warn("userId is required to fetch user-liked items.");
+      return;
+    }
+
     setIsLoading(true);
     setGetLike([]);
+
     try {
       const q = query(
         collection(db, "food"),
-        orderBy("like", "desc"),
-        limit(100)
+        orderBy("like", "desc"), 
+        limit(100) 
       );
 
-      const quarySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q);
 
-      quarySnapshot.forEach((doc) => {
-        setGetLike((prev) => [...prev, { id: doc.id, ...doc.data() }]);
-        console.log(doc.data());
+      const userLikedFoodItems: FoodItem[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+      
+        if (
+          data.like &&
+          Array.isArray(data.like) &&
+          data.like.includes(userId)
+        ) {
+          const item: FoodItem = {
+            id: doc.id,
+            name: data.name,
+            category: data.category,
+            image: data.image,
+            price: data.price,
+            like: data.like,
+            description: data.description || "No description available.",
+          };
+          userLikedFoodItems.push(item);
+        }
       });
+
+      // Now, slice the array to your desired limit after filtering
+      setGetLike(userLikedFoodItems); // Get the top 6 liked by the user
+      // You'd also need to handle setHasLiked based on these filtered items
+      setHasLiked(userLikedFoodItems.length > 0);
     } catch (error) {
-      console.log(error, "getlike error");
+      console.error("Error getting user-liked food items:", error);
     } finally {
       setIsLoading(false);
     }
   };
   useEffect(() => {
-    GetLike();
+    GetLikedItemsByUser(userId);
     console.log(getlikes);
   }, []);
   const renderLeft = useCallback(

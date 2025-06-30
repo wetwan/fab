@@ -247,10 +247,19 @@ const FoodPage = () => {
 
             <View style={styles.priceRow}>
               <FontAwesome6 name="naira-sign" size={18} />
-              <Text style={{ fontSize: 22, marginLeft: 2 ,fontFamily: "outfit",}}>
-                {foodData.price.toFixed(2)}
+              <Text
+                style={{ fontSize: 22, marginLeft: 2, fontFamily: "outfit" }}
+              >
+                {typeof foodData.price === "number" ? foodData.price.toFixed(2) : "0.00"}
               </Text>
-              <Text style={{ fontSize: 16, color: "#e74c3c", marginLeft: 8 ,fontFamily: "outfit"}}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#e74c3c",
+                  marginLeft: 8,
+                  fontFamily: "outfit",
+                }}
+              >
                 per kg
               </Text>
             </View>
@@ -270,7 +279,12 @@ const FoodPage = () => {
                   <Text style={styles.circleText}>-</Text>
                 </Pressable>
                 <Text
-                  style={{ color: "#e74c3c", fontSize: 20, fontWeight: "bold",fontFamily: "outfit", }}
+                  style={{
+                    color: "#e74c3c",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    fontFamily: "outfit",
+                  }}
                 >
                   {count}
                 </Text>
@@ -383,7 +397,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontFamily: "outfit",
   },
-  cartControl: { flexDirection: "row", alignItems: "center", gap: 15,fontFamily: "outfit", },
+  cartControl: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
+    fontFamily: "outfit",
+  },
   circleButton: {
     width: 35,
     height: 35,
