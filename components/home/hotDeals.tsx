@@ -5,16 +5,18 @@ import { useFoodCreation } from "@/context/foodstore";
 import { useRouter } from "expo-router";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import HotDealItem from "./hotDealItem";
+import { FoodItem } from "@/types/type";
 
 const HotDeals = () => {
   const router = useRouter();
   const { setIsLoading } = useFoodCreation();
-  const [getlike, setGetLike] = useState<any[]>([]);
+  const [getlike, setGetLike] = useState<FoodItem[]>([]);
   const hotdeal = true;
   const GetLike = async () => {
     setIsLoading(true);
+    setGetLike([]);
     try {
       const q = query(
         collection(db, "food"),
@@ -25,7 +27,7 @@ const HotDeals = () => {
       const quarySnapshot = await getDocs(q);
 
       quarySnapshot.forEach((doc) => {
-        setGetLike((prev) => [...prev, { id: doc.id, ...doc.data() }]);
+        setGetLike((prev) => [...prev, { id: doc.id, ...doc.data() } as FoodItem]);
       });
     } catch (error) {
       console.log(error, "getlike error");
@@ -52,7 +54,7 @@ const HotDeals = () => {
         <Pressable
           onPress={() => {
             router.push({
-              pathname: "/likes/allLikes",
+              pathname: "/(likes)",
             });
           }}
         >
@@ -77,11 +79,13 @@ const HotDeals = () => {
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
+          justifyContent: 'flex-start',
           alignItems: "center",
+          flexDirection: "row",
+          flexWrap: "wrap",
         }}
       >
-        <FlatList
+        {/* <FlatList
           showsVerticalScrollIndicator={false}
           numColumns={2}
           contentContainerStyle={{
@@ -92,7 +96,11 @@ const HotDeals = () => {
           renderItem={({ item: deals }) => (
             <HotDealItem deals={deals} hotdeal={hotdeal} />
           )}
-        />
+        /> */}
+
+        {getlike.map((item) => (
+          <HotDealItem key={item.id} deals={item} hotdeal={hotdeal} />
+        ))}
       </View>
     </View>
   );

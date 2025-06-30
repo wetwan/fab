@@ -141,7 +141,6 @@ const Index = () => {
             style={{}}
             onPress={() => {
               router.push("/signUp");
-              console.log("Sign up pressed");
             }}
           >
             <Text style={{ color: Colors.blue, fontFamily: "outfit" }}>

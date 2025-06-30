@@ -40,7 +40,7 @@ const Login = () => {
           textStyle={{ textTransform: "capitalize", fontFamily: "outfit" }}
           onPress={() => {
             {
-              console.log("Sign in pressed");
+            
             }
           }}
           style={{
@@ -62,7 +62,7 @@ const Login = () => {
       >
         <Pressable
           style={{}}
-          onPress={() => console.log("forget password pressed")}
+        
         >
           <Text style={{ color: Colors.red, fontFamily: "outfit" }}>
             Forget Password
@@ -84,7 +84,7 @@ const Login = () => {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={() => console.log("Sign up pressed")}
+        
           >
             <Text style={{ color: Colors.blue, fontFamily: "outfit" }}>
               Sign up

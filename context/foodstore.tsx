@@ -11,8 +11,6 @@ type FoodContextType = {
   slider: any[];
   setSlider: React.Dispatch<React.SetStateAction<any[]>>;
   getSlider: () => Promise<void>;
-  categoryFood: any[];
-  setCategoryFood: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const FoodContext = createContext<FoodContextType | undefined>(undefined);
@@ -25,7 +23,6 @@ export function AppContextProvider({
   const [isLoading, setIsLoading] = useState(true);
 
   const [category, setCategory] = useState<any[]>([]);
-  const [categoryFood, setCategoryFood] = useState<any[]>([]);
   const [slider, setSlider] = useState<any[]>([]);
 
   const getCategory = async () => {
@@ -36,7 +33,6 @@ export function AppContextProvider({
 
     quarySnapshot.forEach((doc) => {
       setCategory((prev) => [...prev, { $id: doc.id, ...doc.data() }]);
-      console.log(doc.data());
     });
     setIsLoading(false);
   };
@@ -52,29 +48,9 @@ export function AppContextProvider({
     setIsLoading(false);
   };
 
-  const getCategoryFood = async () => {
-    setIsLoading(true);
-    setCategoryFood([]);
-
-    try {
-      const q = query(collection(db, "food"));
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.docs.forEach((doc) => {
-        setCategoryFood((prev) => [...prev, { id: doc.id, ...doc.data() }]);
-      
-      });
-    } catch (error) {
-      console.error("Failed to fetch category food:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     getCategory();
     getSlider();
-    getCategoryFood();
   }, []);
   return (
     <FoodContext.Provider
@@ -87,8 +63,6 @@ export function AppContextProvider({
         getSlider,
         slider,
         setSlider,
-        setCategoryFood,
-        categoryFood,
       }}
     >
       {children}

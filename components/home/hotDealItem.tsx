@@ -1,12 +1,63 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { db } from "@/configs/FireBase";
+import { FoodItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useRouter } from "expo-router";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const HotDealItem = ({ deals, hotdeal }: any) => {
-  const [liked, setLike] = useState(true);
+  const { user } = useUser();
+  const router = useRouter();
+  const [hasLiked, setHasLiked] = useState(false);
+
+  const [foodData, setFoodData] = useState<FoodItem | null>(null);
+
+  const [isProcessing, setIsProcessing] = useState(false);
+  const userId = user?.id;
+
+  const handleLike = async () => {
+    if (!deals || !userId) {
+      Alert.alert("Error", "You must be logged in to like an item.");
+      return;
+    }
+
+    setIsProcessing(true);
+    const likeRef = doc(db, "food", deals.id);
+
+    try {
+      if (hasLiked) {
+        setHasLiked(false);
+        setFoodData((prev) => ({
+          ...prev!,
+          like: prev!.like?.filter((id) => id !== userId),
+        }));
+        await updateDoc(likeRef, { like: arrayRemove(userId) });
+      } else {
+        setHasLiked(true);
+        setFoodData((prev) => ({ ...prev!, like: [...prev!.like, userId] }));
+        await updateDoc(likeRef, { like: arrayUnion(userId) });
+      }
+    } catch (error) {
+      console.error("Like update error:", error);
+      setHasLiked((prev) => !prev);
+      Alert.alert("Error", "Failed to update like status.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
-    <View
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: "/(food)/[food]",
+          params: { food: deals.id },
+        })
+      }
       style={{
         backgroundColor: "white",
         margin: 10,
@@ -36,7 +87,7 @@ const HotDealItem = ({ deals, hotdeal }: any) => {
 
       <View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
         <AntDesign name="heart" size={12} color="red" />
-        <Text style={[styles.text]}>{deals.like}</Text>
+        <Text style={[styles.text]}> {deals?.like?.length}</Text>
       </View>
 
       <View
@@ -67,16 +118,16 @@ const HotDealItem = ({ deals, hotdeal }: any) => {
         </Pressable>
 
         {hotdeal === true && (
-          <Pressable onPress={() => setLike(!liked)}>
-            {liked === true ? (
-              <AntDesign name="heart" size={18} color="red" />
+          <Pressable onPress={handleLike} disabled={isProcessing}>
+            {hasLiked ? (
+              <AntDesign name="heart" size={18} color="#e74c3c" />
             ) : (
               <AntDesign name="hearto" size={18} color="red" />
             )}
           </Pressable>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

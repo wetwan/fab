@@ -63,7 +63,6 @@ const NewPassword = () => {
 
         router.replace("/(tabs)");
       } else {
-        console.log("Unexpected sign-in status:", result);
         ToastAndroid.show(
           "An unexpected error occurred during password reset.",
           ToastAndroid.LONG

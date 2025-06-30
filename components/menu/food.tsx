@@ -1,11 +1,19 @@
 import { Colors } from "@/constants/Colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 const Food = ({ food }: any) => {
+  const router = useRouter();
   return (
     <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/(food)/[food]",
+          params: { food: food?.id },
+        })
+      }
       activeOpacity={0.6}
       style={{
         backgroundColor: Colors.white,
@@ -44,10 +52,8 @@ const Food = ({ food }: any) => {
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
             <AntDesign name="heart" size={12} color="red" />
-            <View
-              style={{ flexDirection: "row", alignItems: "center",}}
-            >
-              <Text style={[styles.text]}>{food.like}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={[styles.text]}>{food.like.length}</Text>
               <Text style={[styles.text]}> people</Text>
             </View>
           </View>
