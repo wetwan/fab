@@ -4,7 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { useSignIn } from "@clerk/clerk-expo";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Pressable, Text, ToastAndroid, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 
 const Verification = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const Verification = () => {
 
   const handleVerifyCode = async () => {
     if (!code) {
-      ToastAndroid.show("Please enter the verification code", ToastAndroid.TOP);
+      Alert.alert("Please enter the verification code");
       return;
     }
 
@@ -28,11 +28,7 @@ const Verification = () => {
     setError("");
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-
-      ToastAndroid.show(
-        "Code accepted. Now set your new password.",
-        ToastAndroid.SHORT
-      );
+      Alert.alert("Code accepted. Now set your new password.");
       router.push({
         pathname: "/newPassword",
         params: {
@@ -42,8 +38,9 @@ const Verification = () => {
       });
     } catch (err) {
       setError("Failed to process code. Please try again."); // This catch is more for local errors or navigation issues
-      console.error(err);
-      ToastAndroid.show(error, ToastAndroid.LONG);
+
+      Alert.alert(JSON.stringify(err));
+      
     } finally {
       setLoading(false);
     }

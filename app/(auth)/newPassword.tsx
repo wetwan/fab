@@ -5,7 +5,7 @@ import { useSignIn } from "@clerk/clerk-expo";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import React, { useState } from "react";
-import { Text, ToastAndroid, View } from "react-native";
+import { Alert, Text, ToastAndroid, View } from "react-native";
 
 const NewPassword = () => {
   const router = useRouter();
@@ -32,14 +32,11 @@ const NewPassword = () => {
 
     if (!isLoaded) return;
     if (!newPassword || !confirmPassword) {
-      ToastAndroid.show(
-        "Please enter and confirm your new password",
-        ToastAndroid.TOP
-      );
+      Alert.alert("Please enter and confirm your new password");
       return;
     }
     if (newPassword !== confirmPassword) {
-      ToastAndroid.show("Passwords do not match", ToastAndroid.TOP);
+      Alert.alert("Passwords do not match");
       return;
     }
 
@@ -56,17 +53,11 @@ const NewPassword = () => {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        ToastAndroid.show(
-          "Password reset successfully! You are now logged in.",
-          ToastAndroid.LONG
-        );
 
+        Alert.alert("Password reset successfully! You are now logged in.");
         router.replace("/(tabs)");
       } else {
-        ToastAndroid.show(
-          "An unexpected error occurred during password reset.",
-          ToastAndroid.LONG
-        );
+        Alert.alert("An unexpected error occurred during password reset.");
       }
     } catch (err) {
       const clerkError = err as any;
@@ -75,7 +66,7 @@ const NewPassword = () => {
           "Failed to reset password. Please check the code and try again."
       );
       console.error(JSON.stringify(clerkError, null, 2));
-      ToastAndroid.show(error, ToastAndroid.LONG);
+      Alert.alert(error);
     } finally {
       setLoading(false);
     }

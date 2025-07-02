@@ -5,13 +5,12 @@ import { Colors } from "@/constants/Colors";
 import { useSignIn } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-
 import {
+  Alert,
   Image,
   Pressable,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -25,36 +24,27 @@ const Index = () => {
 
   const onSignInPress = async () => {
     if (!email || !password) {
-      ToastAndroid.show("Please fill all the fields", ToastAndroid.TOP);
-      return; // Added return here to stop execution if fields are not filled
+      Alert.alert("Please fill all the fields");
+
+      return;
     }
     if (!isLoaded) return;
-
-    // Start the sign-in process using the email and password provided
     try {
       const signInAttempt = await signIn.create({
         identifier: email,
         password,
       });
-
-      // If sign-in process is complete, set the created session as active
-      // and redirect the user
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/(tabs)");
-        ToastAndroid.show("login successfull", ToastAndroid.TOP);
+
+        Alert.alert("login successfull");
       } else {
-        // If the status isn't complete, check why. User might need to
-        // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2));
-        ToastAndroid.show(
-          "Sign up failed. Please try again.",
-          ToastAndroid.TOP
-        );
+
+        Alert.alert("Sign up failed. Please try again.");
       }
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
     }
   };

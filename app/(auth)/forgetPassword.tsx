@@ -4,7 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { useSignIn } from "@clerk/clerk-expo";
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Text, ToastAndroid, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 
 const ForgetPassword = () => {
   const router = useRouter();
@@ -12,13 +12,13 @@ const ForgetPassword = () => {
   const [email, setEmail] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
-  const [successfulCreation, setSuccessfulCreation] = React.useState(false); // To track if code was sent
+  const [successfulCreation, setSuccessfulCreation] = React.useState(false);
   const [error, setError] = useState("");
 
   const forgetPasswordHandler = async () => {
     if (!isLoaded) return;
     if (!email) {
-      ToastAndroid.show("Please enter your email address", ToastAndroid.TOP);
+      Alert.alert("Please enter your email address");
       return;
     }
 
@@ -31,11 +31,8 @@ const ForgetPassword = () => {
         identifier: email,
       });
 
-      setSuccessfulCreation(true); // Code successfully sent
-      ToastAndroid.show(
-        "Password reset code sent to your email",
-        ToastAndroid.LONG
-      );
+      setSuccessfulCreation(true);
+      Alert.alert("Password reset code sent to your email");
 
       router.push({
         pathname: "/(auth)/passwordVerification",
@@ -44,7 +41,7 @@ const ForgetPassword = () => {
     } catch (err: any) {
       setError(err.errors[0]?.longMessage || "Failed to send reset code.");
       console.error(JSON.stringify(err, null, 2));
-      ToastAndroid.show(error, ToastAndroid.LONG);
+      Alert.alert(error);
     } finally {
       setLoading(false);
     }

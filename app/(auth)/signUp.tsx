@@ -6,6 +6,7 @@ import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -21,9 +22,6 @@ const SignUps = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [pendingVerfication, setPendingVerfication] = useState<boolean>(false);
-  const [code, setCode] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSignUp = async () => {
     if (!email || !password || !firstName || !lastName) {
@@ -40,9 +38,9 @@ const SignUps = () => {
         lastName,
       });
       await setActive({ session: signUp.createdSessionId });
-    
+
       router.replace("/(tabs)");
-      ToastAndroid.show("Sign up successful!", ToastAndroid.TOP);
+      Alert.alert("Sign up successful!");
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
       // You should parse the error from Clerk to show specific messages
@@ -50,7 +48,7 @@ const SignUps = () => {
       const errorMessage =
         clerkError.errors?.[0]?.longMessage ||
         "Sign up failed. Please try again.";
-      ToastAndroid.show(errorMessage, ToastAndroid.TOP);
+      Alert.alert(errorMessage);
     }
   };
 
