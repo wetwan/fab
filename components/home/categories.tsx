@@ -69,6 +69,7 @@ const Categories = () => {
         renderItem={({ item: category }) => (
           <HomeCategory category={category} />
         )}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );

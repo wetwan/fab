@@ -2,22 +2,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import HotDealItem from "@/components/home/hotDealItem";
 import { db } from "@/configs/FireBase";
+import { Colors } from "@/constants/Colors";
 import { useFoodCreation } from "@/context/foodstore";
 import { FoodItem } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 
 const MyLikes = () => {
   const router = useRouter();
   const { user } = useUser();
 
   const userId = user?.id;
-  const { setIsLoading , isLoading} = useFoodCreation();
+  const { setIsLoading, isLoading } = useFoodCreation();
   const [getlikes, setGetLike] = useState<any[]>([]);
   const hotdeal = true;
   const [hasLiked, setHasLiked] = useState(false);
@@ -36,8 +43,8 @@ const MyLikes = () => {
     try {
       const q = query(
         collection(db, "food"),
-        orderBy("like", "desc"), 
-        limit(100) 
+        orderBy("like", "desc"),
+        limit(100)
       );
 
       const querySnapshot = await getDocs(q);
@@ -45,7 +52,7 @@ const MyLikes = () => {
       const userLikedFoodItems: FoodItem[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-      
+
         if (
           data.like &&
           Array.isArray(data.like) &&
@@ -74,50 +81,56 @@ const MyLikes = () => {
   };
   useEffect(() => {
     GetLikedItemsByUser(userId);
-    console.log(getlikes);
   }, []);
-  const renderLeft = useCallback(
-    () => (
-      <Pressable
-        onPress={() => router.back()}
-        style={{ paddingHorizontal: 16 }}
-      >
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </Pressable>
-    ),
-    [router]
-  );
-  const renderRight = useCallback(
-    () => (
-      <Pressable
-        onPress={() => router.replace("/(tabs)/order")}
-        style={{ paddingHorizontal: 1 }}
-      >
-        <AntDesign name="shoppingcart" size={24} color="red" />
-      </Pressable>
-    ),
-    [router]
-  );
 
-    if (isLoading) {
-      return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <ActivityIndicator size="large" color="#e74c3c" />
-        </View>
-      );
-    }
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </View>
+    );
+  }
   return (
     <View>
-      <Stack.Screen
-        options={{
-          headerLeft: renderLeft,
-          headerRight: renderRight,
-          headerTitle: "My likes",
-          headerLargeTitle: false,
-          headerTitleStyle: { fontFamily: "outfit" },
-          headerTitleAlign: "left",
+      <View
+        style={{
+          backgroundColor: Colors.red,
+          borderBottomRightRadius: 20,
+          borderBottomLeftRadius: 20,
+          width: "100%",
+          paddingBlock: 30,
+          paddingTop: 50,
+          paddingInline: 20,
+          position: "fixed",
+          top: 0,
+          marginBottom: 20,
+          flexDirection: "row",
+          gap: 10,
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-      />
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Pressable
+            onPress={() => router.back()}
+            style={{ paddingHorizontal: 16 }}
+          >
+            <Ionicons name="arrow-back" size={24} color="white" />
+          </Pressable>
+          <Text
+            style={{ fontFamily: "outfit-bold", color: "white", fontSize: 20 }}
+          >
+            My Likes
+          </Text>
+        </View>
+
+        <Pressable
+          onPress={() => router.replace("/(tabs)/order")}
+          style={{ paddingHorizontal: 1 }}
+        >
+          <AntDesign name="shoppingcart" size={24} color="white" />
+        </Pressable>
+      </View>
       <View
         style={{
           justifyContent: "space-between",
@@ -137,6 +150,7 @@ const MyLikes = () => {
           renderItem={({ item: deals }) => (
             <HotDealItem deals={deals} hotdeal={hotdeal} />
           )}
+          keyExtractor={(item) => item.id.toString()}
         />
       </View>
     </View>

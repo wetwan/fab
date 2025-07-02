@@ -42,11 +42,10 @@ const HotDealItem = ({ deals }: any) => {
         </Text>
       </View>
 
-      {deals && deals.like.length === 1 && (
+      {deals && deals.like && (
         <View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
           <AntDesign name="heart" size={12} color="red" />
           <Text style={[styles.text]}>
-            {" "}
             {deals?.like?.length} {deals.like.length === 1 ? "like" : "likes"}
           </Text>
         </View>

@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.red,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
+    position: "fixed",
+    top: 0,
   },
   text: {
     fontFamily: "outfit-bold",

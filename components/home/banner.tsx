@@ -28,7 +28,7 @@ const Banner = () => {
             />
           </>
         )}
-        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+        keyExtractor={(item) => item.id?.toString()}
       />
     </View>
   );

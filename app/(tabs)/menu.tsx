@@ -69,6 +69,8 @@ const Menu = () => {
           borderBottomLeftRadius: 20,
           height: 150,
           paddingBlock: 50,
+          position: "fixed",
+          top: 0,
         }}
       >
         <View
@@ -103,6 +105,7 @@ const Menu = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ marginHorizontal: "2%" }}
           renderItem={({ item: food }) => <Food food={food} />}
+          keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={() => (
             <View
               style={{

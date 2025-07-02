@@ -144,6 +144,7 @@ const FoodPage = () => {
           price: foodData.price,
           imageUrl: foodData.image,
           quantity: count,
+          userId: userId,
         };
 
         if (!cartDoc.exists()) {
@@ -174,6 +175,7 @@ const FoodPage = () => {
           count * foodData.price
         } `
       );
+      router.replace("/(tabs)/menu");
     } catch (e) {
       console.error("Add to cart transaction failed: ", e);
       Alert.alert("Error", "Something went wrong while adding to cart.");
@@ -250,7 +252,7 @@ const FoodPage = () => {
               <Text
                 style={{ fontSize: 22, marginLeft: 2, fontFamily: "outfit" }}
               >
-                {typeof foodData.price === "number" ? foodData.price.toFixed(2) : "0.00"}
+                {foodData.price}
               </Text>
               <Text
                 style={{

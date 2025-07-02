@@ -18,12 +18,14 @@ const Welcome = () => {
         width: "100%",
         paddingBlock: 30,
         paddingInline: 20,
+        position: "fixed",
+        top: 0,
       }}
     >
-      <Pressable onPress={() => router.replace("/")}>
+      <Pressable onPress={() => router.push("/(transact)/transart")}>
         <Ionicons name="wallet" size={24} color="white" />
       </Pressable>
-      <Pressable onPress={() => router.replace("/(likes)/myLikes")}>
+      <Pressable onPress={() => router.push("/(likes)/myLikes")}>
         <AntDesign name="heart" size={24} color="white" />
       </Pressable>
     </View>

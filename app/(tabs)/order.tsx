@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import Addcard from "@/components/order/addcart";
+import AddLocation from "@/components/order/addLocation";
 import CartList from "@/components/order/cartList";
 import TotalPayment from "@/components/order/totalpayment";
 import Welcome from "@/components/order/welcome";
-import { db } from "@/configs/FireBase";
-import { collection, getDocs, query } from "firebase/firestore";
+import { useFoodCreation } from "@/context/foodstore";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -13,55 +15,33 @@ import {
   View,
 } from "react-native";
 
-interface CartItem {
-  $id: string;
-  id: string;
-  name: string;
-  userId: string;
-  quantity: number;
-  imageUrl: string;
-  price: number;
-  addedAt?: string;
-}
-
 const Order = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const {
+    cart,
+    isLoading,
+    totalPriceOfCart,
+    taxPriceOfCart,
+    getCart,
+    payment,
+    setPayment,
+  } = useFoodCreation();
 
-  const totalPriceOfCart = cart.reduce(
-    (acc, item) => acc + item?.quantity * item.price,
-    0
-  );
-  const taxPriceOfCart = (4 / 100) * totalPriceOfCart;
+  const [cards, setCards] = useState<boolean>(false);
 
-  const getCart = async () => {
-    try {
-      setCart([]);
-      setIsLoading(true);
-
-      const q = query(collection(db, "carts"));
-      const querySnapshot = await getDocs(q);
-
-      const allItems: CartItem[] = [];
-
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (Array.isArray(data.items)) {
-          allItems.push(...data.items);
-        }
-      });
-
-      setCart(allItems);
-    } catch (error) {
-      console.log(error, "error getting cart");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [cartData, setCartData] = useState<any[]>([]);
 
   useEffect(() => {
-    getCart();
-  }, []);
+    setCartData((prev) => ({
+      ...prev,
+      cart: cart,
+      totalPriceOfCart: totalPriceOfCart,
+      taxPriceOfCart: taxPriceOfCart,
+    }));
+  }, [cart]);
+
+  useEffect(() => {
+    // console.log(cartData);
+  }, [cartData]);
 
   if (isLoading) {
     return (
@@ -88,15 +68,59 @@ const Order = () => {
       <FlatList
         data={cart}
         renderItem={({ item: cart }) => <CartList cart={cart} />}
+        keyExtractor={(item, i) => item.id.toString() || i.toString()}
+        refreshing={isLoading}
+        onRefresh={getCart}
+          ListEmptyComponent={() => (
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: 250,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "outfit-bold",
+                        textAlign: "center",
+                        textTransform: "capitalize",
+                        color: "gray",
+                      }}
+                    >
+                      No item found in cart
+                    </Text>
+                  </View>
+                )}
       />
 
       {/* total amount and payment  */}
 
       <TotalPayment
-        cart={cart}
         totalPriceOfCart={totalPriceOfCart}
         taxPriceOfCart={taxPriceOfCart}
+        payment={setPayment}
+        cartData={cartData}
+        setCartData={setCartData}
       />
+
+      {payment && (
+        <AddLocation
+          payment={setPayment}
+          setCard={setCards}
+          cartData={cartData}
+          setCartData={setCartData}
+          totalPriceOfCart={totalPriceOfCart}
+          taxPriceOfCart={taxPriceOfCart}
+        />
+      )}
+      {cards && (
+        <Addcard
+          payment={setPayment}
+          setCards={setCards}
+          cartData={cartData}
+          setCartData={setCartData}
+        />
+      )}
     </View>
   );
 };

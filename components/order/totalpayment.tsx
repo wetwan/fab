@@ -1,3 +1,4 @@
+import { useFoodCreation } from "@/context/foodstore";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -14,16 +15,18 @@ interface CartItem {
 }
 
 type TotalPaymentProp = {
-  cart: CartItem[];
-  taxPriceOfCart: number
-  totalPriceOfCart: number
+  taxPriceOfCart: number;
+  totalPriceOfCart: number;
+  payment: React.Dispatch<React.SetStateAction<boolean>>;
+  cartData: any[];
+  setCartData: React.Dispatch<React.SetStateAction<any[]>>;
 };
-const TotalPayment = ({ cart , taxPriceOfCart, totalPriceOfCart}: TotalPaymentProp) => {
-  // const totalPriceOfCart = cart.reduce(
-  //   (acc, item) => acc + item?.quantity * item.price,
-  //   0
-  // );
-  // const taxPriceOfCart = (4 / 100) * totalPriceOfCart;
+const TotalPayment = ({
+  taxPriceOfCart,
+  totalPriceOfCart,
+  payment,
+}: TotalPaymentProp) => {
+  const { cart, isLoading } = useFoodCreation();
   const ammountbepaid = taxPriceOfCart + totalPriceOfCart;
   return (
     <View
@@ -105,7 +108,12 @@ const TotalPayment = ({ cart , taxPriceOfCart, totalPriceOfCart}: TotalPaymentPr
         </View>
       </View>
 
-      <TouchableOpacity style={[styles.button]} activeOpacity={5}>
+      <TouchableOpacity
+        style={[styles.button, { opacity: isLoading ? 0.6 : 1 }]}
+        activeOpacity={5}
+        onPress={() => payment(true)}
+        disabled={cart.length === 0}
+      >
         <Text
           style={[styles.text, { color: "white", fontFamily: "outfit-bold" }]}
         >

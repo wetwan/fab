@@ -15,7 +15,13 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import HotDealItem from "./hotDealItem";
 
 const HotDeals = () => {
@@ -145,8 +151,8 @@ const HotDeals = () => {
           )}
         /> */}
 
-        {getlike.map((item) => (
-          <HotDealItem key={item.id} deals={item} hotdeal={hotdeal} />
+        {getlike.map((item, i) => (
+          <HotDealItem key={i} deals={item} hotdeal={hotdeal} />
         ))}
       </View>
     </View>
