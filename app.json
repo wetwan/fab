@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/splash.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.wetwan.fab"
     },
     "web": {
       "bundler": "metro",
@@ -35,8 +36,17 @@
       ],
       "expo-font"
     ],
+     "cli": {
+    "appVersionSource": "project"
+  },
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "1a671e00-dfcf-4241-879a-160e17073321"
+      }
     }
   }
 }
