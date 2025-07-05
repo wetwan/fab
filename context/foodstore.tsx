@@ -313,7 +313,7 @@ export function AppContextProvider({
 
       try {
         await setDoc(
-          doc(db, "transactions", error.code || "unknown_failure"),
+          doc(db, "transactions"),
           {
             userId: userId,
             orderTime: serverTimestamp(),
