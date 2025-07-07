@@ -1,4 +1,6 @@
+import Reviews from "@/components/food/reviews";
 import { db } from "@/configs/FireBase";
+import { Colors } from "@/constants/Colors";
 import { CartItem, FoodItem } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
 import {
@@ -18,7 +20,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -66,6 +68,10 @@ const FoodPage = () => {
             price: data.price,
             like: data.like || [],
             description: data.description || "No description available.",
+            halal: data.halal,
+            nutrient: data.nutrient,
+            ingredients: data.ingredients,
+            reviews: data.reviews || [],
           };
           setFoodData(item);
           if (userId && item.like.includes(userId)) {
@@ -246,7 +252,14 @@ const FoodPage = () => {
                 <Text style={styles.categoryTag}>{foodData.category}</Text>
               </View>
             </View>
-
+            <View style={[styles.categoryContainer, { marginTop: 10, width: 80 }]}>
+              <MaterialCommunityIcons
+                name="food-halal"
+                size={24}
+                color="#e74c3c"
+              />
+              <Text style={styles.categoryTag}>{foodData.halal}</Text>
+            </View>
             <View style={styles.priceRow}>
               <FontAwesome6 name="naira-sign" size={18} />
               <Text
@@ -265,8 +278,18 @@ const FoodPage = () => {
                 per kg
               </Text>
             </View>
-
-            <Text style={styles.description}>{foodData.description}</Text>
+            <View style={[styles.descriptionContainer]}>
+              <Text style={[styles.descriptionHeader]}>description</Text>
+              <Text style={styles.description}>{foodData.description}</Text>
+            </View>
+            <View style={[styles.descriptionContainer]}>
+              <Text style={[styles.descriptionHeader]}>Nutrient</Text>
+              <Text style={styles.description}>{foodData.nutrient}</Text>
+            </View>
+            <View style={[styles.descriptionContainer]}>
+              <Text style={[styles.descriptionHeader]}>ingredients</Text>
+              <Text style={styles.description}>{foodData.ingredients}</Text>
+            </View>
 
             <View style={styles.likesCartRow}>
               <Text>
@@ -322,6 +345,49 @@ const FoodPage = () => {
                 </TouchableOpacity>
               ))}
             </View>
+            {/* Reviews */}
+            <Reviews foodData={foodData} />
+
+            {/* posting reviews */}
+
+            {foodData.reviews.map((item, i) => (
+              <View key={i} style={{ marginTop: 10 }}>
+                <View
+                  style={{ gap: 5, flexDirection: "row", alignItems: "center" }}
+                >
+                  <Image
+                    source={{ uri: item.userImage }}
+                    height={50}
+                    width={50}
+                    style={{ borderRadius: 25 }}
+                  />
+                  <Text
+                    style={[
+                      {
+                        fontFamily: "outfit-medium",
+                        textTransform: "capitalize",
+                        fontSize: 20,
+                      },
+                    ]}
+                  >
+                    {item.userName}
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    padding: 10,
+                    paddingBlock: 20,
+                    fontFamily: "outfit",
+                    borderRadius: 5,
+                    marginTop: 5,
+                    borderWidth: 1,
+                    borderColor: Colors.red,
+                  }}
+                >
+                  {item?.message}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -388,8 +454,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#666",
     lineHeight: 22,
-    marginTop: 20,
     fontFamily: "outfit",
+  },
+  descriptionHeader: {
+    fontSize: 20,
+    color: "#666",
+    lineHeight: 22,
+    fontFamily: "outfit-medium",
+    textTransform: "capitalize",
+    marginBlock: 5,
+  },
+  descriptionContainer: {
+    marginTop: 20,
+    padding: 5,
+    borderWidth: 1,
+    borderColor: "#e74c3c",
+    borderRadius: 10,
   },
   likesCartRow: {
     flexDirection: "row",

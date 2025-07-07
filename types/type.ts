@@ -1,11 +1,19 @@
 export type FoodItem = {
+    like: string[];
+    price: number;
     id: string;
     name: string;
-    category: string;
     image: string;
-    price: number;
-    like: string[];
-    description?: string;
+    description: string;
+    halal: string;
+    category: string;
+    ingredients: string;
+    nutrient: string;
+    reviews: [{
+        message: string,
+        userName: string,
+        userImage: string,
+    }],
 };
 
 

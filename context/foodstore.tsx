@@ -319,7 +319,7 @@ export function AppContextProvider({
             orderTime: serverTimestamp(),
             orderDate: Date.now(),
             totalAmount: currentTotalAmount,
-            status: "failed",
+            paymentStatus: "failed",
             paymentIntentId: error.code,
             items: cartSnapshot,
             errorMessage: error.message,
@@ -340,12 +340,12 @@ export function AppContextProvider({
           userId,
           orderTime: serverTimestamp(),
           totalAmount: currentTotalAmount,
-          status: "completed",
+          paymentStatus: "completed",
+          deliveryStatus: "pending",
           paymentIntentId,
           phone,
           address,
           items: cartSnapshot,
-          orderDate: Date.now(),
         });
         console.log(
           "Transaction saved to Firestore with ID:",
