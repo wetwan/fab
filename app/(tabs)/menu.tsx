@@ -59,7 +59,7 @@ const Menu = () => {
     );
   }
   return (
-    <View style={{}}>
+    <>
       {/* search box */}
       <View
         style={{
@@ -99,36 +99,34 @@ const Menu = () => {
         </View>
       </View>
 
-      <View>
-        <FlatList
-          data={filteredFoods}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ marginHorizontal: "2%" }}
-          renderItem={({ item: food }) => <Food food={food} />}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={() => (
-            <View
+      <FlatList
+        data={filteredFoods}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ marginHorizontal: "2%" }}
+        renderItem={({ item: food }) => <Food food={food} />}
+        keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 250,
+            }}
+          >
+            <Text
               style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 250,
+                fontFamily: "outfit-bold",
+                textAlign: "center",
+                textTransform: "capitalize",
+                color: "gray",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "outfit-bold",
-                  textAlign: "center",
-                  textTransform: "capitalize",
-                  color: "gray",
-                }}
-              >
-                no {value} found
-              </Text>
-            </View>
-          )}
-        />
-      </View>
-    </View>
+              no {value} found
+            </Text>
+          </View>
+        )}
+      />
+    </>
   );
 };
 

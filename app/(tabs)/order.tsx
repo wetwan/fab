@@ -30,17 +30,9 @@ const Order = () => {
 
   const [cartData, setCartData] = useState<any[]>([]);
 
-  useEffect(() => {
-    setCartData((prev) => ({
-      ...prev,
-      cart: cart,
-      totalPriceOfCart: totalPriceOfCart,
-      taxPriceOfCart: taxPriceOfCart,
-    }));
-  }, [cart]);
 
   useEffect(() => {
-    // console.log(cartData);
+  
   }, [cartData]);
 
   if (isLoading) {

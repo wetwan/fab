@@ -30,6 +30,7 @@ export interface CartItem {
 
 export type Order = {
     id: string;
+    AttendantName?: string
     address: {
         countryName: string;
         homeNumber: string;
@@ -50,7 +51,7 @@ export type Order = {
         seconds: number;
         nanoseconds: number;
     };
-    orderDate?: number
+
     paymentIntentId: {
         Canceled: string;
         Processing: string;
@@ -62,7 +63,9 @@ export type Order = {
         Unknown: string;
     };
     phone: string;
-    status: "pending" | "completed" | "failed" | string;
+    deliveryStatus: "pending" | "completed" | "failed" | string;
+    paymentStatus: "pending" | "completed" | "failed" | string;
+
     totalAmount: number;
     userId: string;
 };

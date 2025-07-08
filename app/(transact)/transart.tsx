@@ -41,9 +41,9 @@ const Transart = () => {
           id: doc.id,
           address: data.address,
           items: data?.items,
-          orderDate: data.orderDate,
           paymentIntentId: data.paymentIntentId,
-          status: data.status,
+          paymentStatus: data.paymentStatus,
+          deliveryStatus: data.deliveryStatus,
           totalAmount: data.totalAmount ?? 0,
           userId: data.userId,
           phone: data.phone,
@@ -84,7 +84,7 @@ const Transart = () => {
   }
 
   return (
-    <View style={{}}>
+    <>
       <View
         style={{
           backgroundColor: Colors.red,
@@ -130,7 +130,7 @@ const Transart = () => {
           </View>
         )}
       />
-    </View>
+    </>
   );
 };
 

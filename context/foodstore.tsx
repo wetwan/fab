@@ -140,21 +140,17 @@ export function AppContextProvider({
         const data = docSnap.data();
         if (Array.isArray(data.items)) {
           allItems.push(...data.items);
-        } else {
-          console.warn(
-            "Cart document found, but 'items' field is not an array or is missing."
-          );
         }
       } else {
         console.log("No cart found for this user.");
 
         setCart([]);
 
-        return; // Exit early if no cart document
+        return;
       }
       setCart(allItems);
     } catch (error) {
-      console.error("Error getting cart:", error); // Use console.error for better visibility
+      console.error("Error getting cart:", error);
     } finally {
       setIsLoading(false);
     }
@@ -316,6 +312,7 @@ export function AppContextProvider({
           doc(db, "transactions"),
           {
             userId: userId,
+            userName: user?.fullName || "Unknown User",
             orderTime: serverTimestamp(),
             orderDate: Date.now(),
             totalAmount: currentTotalAmount,
@@ -332,12 +329,13 @@ export function AppContextProvider({
         console.error("Error logging failed transaction:", logError);
       }
     } else {
-      Alert.alert("Success", "Your order is confirmed!");
+      Alert.alert("Success", "Your order is being proccesed!");
       try {
         const transactionRef = doc(collection(db, "transactions"));
 
         await setDoc(transactionRef, {
           userId,
+          userName: user?.fullName || "Unknown User",
           orderTime: serverTimestamp(),
           totalAmount: currentTotalAmount,
           paymentStatus: "completed",
@@ -347,10 +345,6 @@ export function AppContextProvider({
           address,
           items: cartSnapshot,
         });
-        console.log(
-          "Transaction saved to Firestore with ID:",
-          transactionRef.id
-        );
 
         const userCartRef = doc(db, "carts", userId);
         await deleteDoc(userCartRef);

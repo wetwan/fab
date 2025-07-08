@@ -50,13 +50,17 @@ const Food = ({ food }: any) => {
               </Text>
             </View>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-            <AntDesign name="heart" size={12} color="red" />
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={[styles.text]}>{food?.like?.length}</Text>
-              <Text style={[styles.text]}> people</Text>
+          {food?.like?.length >= 1 && (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+            >
+              <AntDesign name="heart" size={12} color="red" />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={[styles.text]}>{food?.like?.length}</Text>
+                <Text style={[styles.text]}> people</Text>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </View>
 

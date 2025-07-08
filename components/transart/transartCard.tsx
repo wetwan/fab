@@ -25,10 +25,10 @@ const TransartCard = ({ transaction }: transactionProp) => {
       }
       style={[
         styles.container,
-        { borderColor: transaction.status === "completed" ? "#08aa00" : "red" },
+        { borderColor: transaction.deliveryStatus === "completed" ? "#08aa00" : "red" },
       ]}
     >
-      {transaction.status === "completed" ? (
+      {transaction.paymentStatus === "completed" ? (
         <Image
           source={require("../../assets/images/check.png")}
           width={30}
@@ -58,7 +58,7 @@ const TransartCard = ({ transaction }: transactionProp) => {
           styles.basicText,
           styles.box,
           {
-            borderColor: transaction.status === "completed" ? "#08aa00" : "red",
+            borderColor: transaction.deliveryStatus === "completed" ? "#08aa00" : "red",
           },
         ]}
       >
@@ -67,10 +67,10 @@ const TransartCard = ({ transaction }: transactionProp) => {
       <Text
         style={[
           styles.basicText,
-          { color: transaction.status === "completed" ? "#08aa00" : "red" },
+          { color: transaction.deliveryStatus === "completed" ? "#08aa00" : "#08ac2f" },
         ]}
       >
-        {transaction.status}
+        {transaction.deliveryStatus}
       </Text>
     </Pressable>
   );

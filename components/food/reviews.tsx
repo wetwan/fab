@@ -2,7 +2,7 @@ import { db } from "@/configs/FireBase";
 import { Colors } from "@/constants/Colors";
 import { FoodItem } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -13,22 +13,49 @@ interface review {
 const Reviews = ({ foodData }: review) => {
   const { user } = useUser();
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const fetchReviews = async () => {
+    if (!foodData?.id) return;
+    try {
+      const docRef = doc(db, "food", foodData.id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data().reviews || [];
+      }
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+    }
+  };
 
   const AddReview = async () => {
+    if (!foodData?.id) {
+      Alert.alert("Food item ID is missing.");
+      return;
+    }
+    setLoading(true);
     try {
-      const docRef = doc(db, "food", foodData?.id);
+      const docRef = doc(db, "food", foodData.id);
       await updateDoc(docRef, {
         reviews: arrayUnion({
           message: message,
           userName: user?.fullName,
           userImage: user?.imageUrl,
+          time: new Date().toISOString(),
         }),
       });
+
       Alert.alert("Review added successfully.");
+      setMessage("");
+      setLoading(false);
+      // Refetch updated reviews after adding a new one
+      await fetchReviews();
     } catch (error) {
       Alert.alert(JSON.stringify(error));
+      console.log(error);
     }
   };
+
   return (
     <View>
       <Text style={{ fontFamily: "outfit-bold", marginBlock: 10 }}>
@@ -56,7 +83,7 @@ const Reviews = ({ foodData }: review) => {
             marginTop: 5,
           }}
           activeOpacity={0.8}
-          disabled={!message}
+          disabled={!message || loading}
           onPress={AddReview}
         >
           <Text
@@ -73,5 +100,7 @@ const Reviews = ({ foodData }: review) => {
     </View>
   );
 };
+
+// Fetches the latest reviews for the given food item
 
 export default Reviews;

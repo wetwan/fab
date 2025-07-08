@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Reviews from "@/components/food/reviews";
 import { db } from "@/configs/FireBase";
 import { Colors } from "@/constants/Colors";
@@ -16,6 +17,7 @@ import {
   arrayUnion,
   doc,
   getDoc,
+  orderBy,
   runTransaction,
   serverTimestamp,
   updateDoc,
@@ -45,6 +47,7 @@ const FoodPage = () => {
   const [hasLiked, setHasLiked] = useState(false);
   const [count, setCount] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [reviews, setReviews] = useState<any[]>([]);
 
   useEffect(() => {
     const getFoodData = async () => {
@@ -94,6 +97,27 @@ const FoodPage = () => {
   const handleIncrement = () => {
     setCount((prevCount) => prevCount + 1);
   };
+
+  const fetchReviews = async () => {
+    setReviews([]);
+    if (!foodData?.id) return;
+    try {
+      const docRef = doc(db, "food", foodData.id);
+      orderBy("time", "desc");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setReviews(docSnap.data().reviews || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (foodData) {
+      fetchReviews();
+    }
+  }, [foodData]);
 
   const handleDecrement = () => {
     setCount((prevCount) => Math.max(1, prevCount - 1));
@@ -252,7 +276,9 @@ const FoodPage = () => {
                 <Text style={styles.categoryTag}>{foodData.category}</Text>
               </View>
             </View>
-            <View style={[styles.categoryContainer, { marginTop: 10, width: 80 }]}>
+            <View
+              style={[styles.categoryContainer, { marginTop: 10, width: 80 }]}
+            >
               <MaterialCommunityIcons
                 name="food-halal"
                 size={24}
@@ -350,28 +376,42 @@ const FoodPage = () => {
 
             {/* posting reviews */}
 
-            {foodData.reviews.map((item, i) => (
-              <View key={i} style={{ marginTop: 10 }}>
+            {reviews.map((item, i) => (
+              <View
+                key={i}
+                style={{
+                  marginTop: 20,
+                  padding: 10,
+                  borderWidth: 1,
+                  borderColor: "#08ac2f",
+                  borderRadius: 10,
+                }}
+              >
                 <View
                   style={{ gap: 5, flexDirection: "row", alignItems: "center" }}
                 >
                   <Image
-                    source={{ uri: item.userImage }}
+                    source={{ uri: item?.userImage }}
                     height={50}
                     width={50}
                     style={{ borderRadius: 25 }}
                   />
-                  <Text
-                    style={[
-                      {
-                        fontFamily: "outfit-medium",
-                        textTransform: "capitalize",
-                        fontSize: 20,
-                      },
-                    ]}
-                  >
-                    {item.userName}
-                  </Text>
+                  <View>
+                    <Text
+                      style={[
+                        {
+                          fontFamily: "outfit-medium",
+                          textTransform: "capitalize",
+                          fontSize: 20,
+                        },
+                      ]}
+                    >
+                      {item.userName}
+                    </Text>
+                    <Text style={{ fontFamily: "outfit", color: "#666" }}>
+                      {item.time && new Date(item.time).toLocaleDateString()}
+                    </Text>
+                  </View>
                 </View>
                 <Text
                   style={{

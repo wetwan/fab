@@ -59,7 +59,7 @@ const CategoryId = () => {
   }
 
   return (
-    <View style={{}}>
+    <>
       <View
         style={{
           backgroundColor: Colors.red,
@@ -120,7 +120,7 @@ const CategoryId = () => {
           </View>
         )}
       />
-    </View>
+    </>
   );
 };
 

@@ -10,7 +10,7 @@ const CategoryHome = () => {
   const router = useRouter();
 
   return (
-    <View style={{ flex: 1 }}>
+    <>
       <View
         style={{
           backgroundColor: Colors.red,
@@ -31,7 +31,9 @@ const CategoryHome = () => {
         <Pressable onPress={() => router.push("/(tabs)")}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </Pressable>
-        <Text style={{ fontFamily: "outfit-bold", color: "white" , fontSize: 20}}>
+        <Text
+          style={{ fontFamily: "outfit-bold", color: "white", fontSize: 20 }}
+        >
           Category
         </Text>
       </View>
@@ -45,7 +47,7 @@ const CategoryHome = () => {
         renderItem={({ item: category }) => <CategoryId category={category} />}
         keyExtractor={(item) => item.id.toString()}
       />
-    </View>
+    </>
   );
 };
 

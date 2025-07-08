@@ -2,7 +2,7 @@ import { db } from "@/configs/FireBase";
 import { Colors } from "@/constants/Colors";
 import { Order } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -44,13 +44,14 @@ const TransartId = () => {
             id: docSnap.id,
             address: data.address,
             items: data.items ?? [],
-            orderDate: data.orderDate,
             orderTime: data.orderTime,
             paymentIntentId: data.paymentIntentId,
-            status: data.status,
+            paymentStatus: data.paymentStatus,
+            deliveryStatus: data.deliveryStatus,
             totalAmount: data.totalAmount ?? 0,
             userId: data.userId,
             phone: data.phone,
+            AttendantName: data.AttendantName,
           };
 
           setTransactionData(order);
@@ -119,12 +120,16 @@ const TransartId = () => {
               {transactionData?.orderTime?.seconds &&
                 new Date(
                   transactionData?.orderTime.seconds * 1000
-                ).toLocaleDateString()}
+                ).toLocaleDateString()}{" "}
+              {transactionData?.orderTime?.seconds &&
+                new Date(
+                  transactionData?.orderTime.seconds * 1000
+                ).toLocaleTimeString()}
             </Text>
           </View>
 
           <View>
-            {transactionData?.status === "completed" ? (
+            {transactionData?.paymentStatus === "completed" ? (
               <Image
                 source={require("../../assets/images/check.png")}
                 width={30}
@@ -147,14 +152,14 @@ const TransartId = () => {
             {
               gap: 1,
               padding: 10,
-              backgroundColor: "white",
+              backgroundColor: "#08ac2f",
               marginTop: 20,
               borderRadius: 5,
             },
           ]}
         >
-          <Text style={[styles.basicText, { color: "green" }]}>
-            totalAmount:{"  "}
+          <Text style={[styles.basicText, { color: "white" }]}>
+            totalAmount:{" "}
           </Text>
           <FontAwesome6 name="naira-sign" size={10} color={"balck"} />
           <Text
@@ -164,6 +169,31 @@ const TransartId = () => {
             ]}
           >
             {(transactionData?.totalAmount ?? 0) / 100}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.basicView,
+            {
+              gap: 1,
+              padding: 10,
+              backgroundColor: "#08ac2f",
+              marginTop: 20,
+              borderRadius: 5,
+            },
+          ]}
+        >
+          <Text style={[styles.basicText, { color: "white" }]}>
+            processing Status:
+          </Text>
+          <Text
+            style={[
+              styles.basicText,
+              { color: "#000", fontFamily: "outfit-medium" },
+            ]}
+          >
+            {" "}
+            {transactionData?.deliveryStatus}
           </Text>
         </View>
 
@@ -203,6 +233,10 @@ const TransartId = () => {
             gap: 10,
             alignItems: "center",
             marginBlock: 15,
+
+            padding: 10,
+            borderRadius: 5,
+            backgroundColor: Colors.gray,
           }}
         >
           <Image
@@ -217,18 +251,43 @@ const TransartId = () => {
               {transactionData?.address.homeNumber}{" "}
               {transactionData?.address.streetName}{" "}
               {transactionData?.address.townName}{" "}
-              {transactionData?.address.stateName}
+              {transactionData?.address.stateName} {""}
+              {transactionData?.address.countryName} {""}
             </Text>
           </View>
         </View>
-
+        {transactionData?.deliveryStatus === "completed" && (
+          <View
+            style={[
+              styles.basicView,
+              {
+                gap: 5,
+                padding: 10,
+                backgroundColor: "#08ac2f",
+                marginTop: 20,
+                borderRadius: 5,
+              },
+            ]}
+          >
+            <AntDesign name="infocirlceo" size={14} color="#fff" />
+            <Text style={[styles.basicText, { color: "#fff" }]}>
+              please not that delivery in handed by outside compnay and will
+              determine your delivery time
+            </Text>
+          </View>
+        )}
         <Pressable
-          style={{ backgroundColor: "white", padding: 10, borderRadius: 3 }}
+          style={{
+            backgroundColor: "green",
+            padding: 10,
+            borderRadius: 3,
+            marginTop: 20,
+          }}
           onPress={() =>
             Alert.alert("This is coming soon! ", " Not avaliable yet")
           }
         >
-          <Text style={[styles.basicText, { color: "green" }]}>
+          <Text style={[styles.basicText, { color: "white" }]}>
             Downlaod Transaction
           </Text>
         </Pressable>
@@ -249,7 +308,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     borderColor: "#08aa00",
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.white,
     alignItems: "center",
 
     elevation: 5,
@@ -259,7 +318,7 @@ const styles = StyleSheet.create({
     fontFamily: "outfit",
     fontSize: 13,
     textTransform: "capitalize",
-    color: "white",
+    color: "black",
   },
   basicView: {
     flexDirection: "row",

@@ -94,7 +94,7 @@ const Index = () => {
           <Text
             style={{ fontFamily: "outfit-bold", color: "white", fontSize: 20 }}
           >
-            Category
+            Top Likes
           </Text>
         </View>
 
