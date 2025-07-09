@@ -36,9 +36,9 @@
       ],
       "expo-font"
     ],
-     "cli": {
-    "appVersionSource": "project"
-  },
+    "cli": {
+      "appVersionSource": "project"
+    },
     "experiments": {
       "typedRoutes": true
     },
@@ -47,6 +47,12 @@
       "eas": {
         "projectId": "1a671e00-dfcf-4241-879a-160e17073321"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/1a671e00-dfcf-4241-879a-160e17073321"
     }
   }
 }
